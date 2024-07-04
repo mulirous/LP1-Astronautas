@@ -1,4 +1,4 @@
-#include "astronauta.h"
+#include "impl/astronauta.h"
 
 Astronauta::Astronauta(const string& cpf, const string& nome, int idade)
     : cpf(cpf), nome(nome), idade(idade) {}

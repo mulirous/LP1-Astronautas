@@ -1,5 +1,5 @@
-#include "voo.h"
-#include "cemiterio.h"
+#include "impl/voo.h"
+#include "impl/cemiterio.h"
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
