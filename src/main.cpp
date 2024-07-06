@@ -1,36 +1,43 @@
 // Falta para fazer:
-// Acessar a lista de histórico de voos no case 9 e corrigir disponibilidade do astonata ao finalizar os voos
+// Acessar o ultimo voo do astronauta que morreu
 
 #include <iostream>
 #include <list>
-#include "mod/impl/astronauta.h"
-#include "mod/impl/voo.h"
-#include "mod/impl/cemiterio.h"
+#include <thread>
+#include <chrono>
+#include "../impl/enumAstro.h"
+#include "../impl/enumVoo.h"
+#include "../impl/astronauta.h"
+#include "../impl/voo.h"
+#include "../impl/cemiterio.h"
+#include "../impl/tools.h"
 
 using namespace std;
 
-void limpaTela() {
-    cout << "\033[2J\033[1;1H";
-}
-
-void opcoes() {
+void opcoes() {  // Função que disponibiliza a interface do menu
     limpaTela();
 
-    list<string> opcoes;
-    opcoes.push_back("|||||||||||||||||||||||||||||||||||||||||||||||");
-    opcoes.push_back("||            AGENCIA DE VOOS IMDir          ||");
-    opcoes.push_back("|||||||||||||||||||||||||||||||||||||||||||||||");
-    opcoes.push_back("||       1 - Cadastrar Astronauta            ||");
-    opcoes.push_back("||       2 - Cadastrar Voo                   ||");
-    opcoes.push_back("||       3 - Registrar Passageiros em um Voo ||");
-    opcoes.push_back("||       4 - Remover passageiros de um Voo   ||");
-    opcoes.push_back("||       5 - Listar Voos                     ||");
-    opcoes.push_back("||       6 - Lancar Voo                      ||");
-    opcoes.push_back("||       7 - Finalizar Voo                   ||");
-    opcoes.push_back("||       8 - Listar astronautas              ||");
-    opcoes.push_back("||       9 - Mencoes honrosas                ||");
-    opcoes.push_back("||       0 - Sair                            ||");
-    opcoes.push_back("|||||||||||||||||||||||||||||||||||||||||||||||");
+    list<string> opcoes = {
+        "###############################################",
+        "#                                             #",
+        "#             AGENCIA DE VOOS IMDir           #",
+        "#                                             #",
+        "###############################################",
+        "#                                             #",
+        "#  1 -    Cadastrar Astronauta                #",
+        "#  2 -    Cadastrar Voo                       #",
+        "#  3 -    Registrar Passageiros em um Voo     #",
+        "#  4 -    Remover Passageiros de um Voo       #",
+        "#  5 -    Listar Voos                         #",
+        "#  6 -    Lancar Voo                          #",
+        "#  7 -    Finalizar Voo                       #",
+        "#  8 -    Listar Astronautas                  #",
+        "#  9 -    Buscar Voo por Destino              #",
+        "# 10 -    Mencoes Honrosas                    #",
+        "#  0 -    Sair                                #",
+        "#                                             #",
+        "###############################################"
+    };
 
     for (const auto& frase : opcoes) {
         cout << frase << endl;
@@ -38,14 +45,13 @@ void opcoes() {
 
     cout << endl;
     cout << endl;
-    cout << endl;
 }
 
 int main(void) {
     int controle = 0;
-    list<Astronauta> astronautas;
-    list<Voo> voos;
-    Cemiterio cemiterio;
+    list<Astronauta> astronautas;  // Lista astronautas
+    list<Voo> voos;  // Lista voos
+    Cemiterio cemiterio;  // Cemitério
 
     while (controle != 1) {
         cout << endl;
@@ -59,7 +65,7 @@ int main(void) {
         cout << endl;
 
         switch (op) {
-            case 1: {
+            case 1: {  // Case de cadastro de astronauta
                 string cpf, nome;
                 int idade, verificacao = 0;
 
@@ -75,6 +81,7 @@ int main(void) {
 
                 if ( verificacao == 1) {
                     cout << "Tente cadastrar outro astronauta" << endl;
+                    pausaParaLeitura();
                     break;
                 }
 
@@ -87,10 +94,12 @@ int main(void) {
 
                     if (idade < 18) {
                         cout << "O astronauta eh muito novo para ser cadastrado" << endl << "Cadastre outro astronauta" << endl;
+                        pausaParaLeitura();
                         break;
                     }
                     else if (idade > 85) {
                         cout << "O astronauta eh muito velho para ser cadastrado" << endl << "Cadastre outro astronauta" << endl;
+                        pausaParaLeitura();
                         break;
                     }
                     else {
@@ -101,15 +110,15 @@ int main(void) {
                         cout << "   Idade: " << astronauta.getIdade() << endl;
 
                         astronautas.push_back(astronauta); // Armazenando astronauta em uma lista
+                        pausaParaLeitura();
                         break;
                     }    
                 }  
             }
 
-            case 2: {
+            case 2: {  // Case de cadastro de voo
                 int numVoo, verificacao = 0;
                 string destino;
-
 
                 cout << "Codigo do voo: ";
                 cin >> numVoo;
@@ -124,6 +133,7 @@ int main(void) {
 
                 if (verificacao == 1) {
                     cout << "Tente cadastrar outo voo" << endl;
+                    pausaParaLeitura();
                     break;
                 }
                 else {
@@ -136,11 +146,12 @@ int main(void) {
 
                     voos.push_back(novoVoo); // Armazenando Voo em lista
 
+                    pausaParaLeitura();
                     break;
                 }
             }
 
-            case 3: {
+            case 3: {  // Case de inserção de astronautas em voo
                 cout << "Voos disponiveis (em planejamento): " << endl;
 
                 for (const auto& voo : voos) {
@@ -161,11 +172,29 @@ int main(void) {
                     if (it->getCodigo() == cod && it->getStatus() == PLANEJANDO) {
                         cout << "Voo com destino a " << it->getDestino() << endl; // Diz qual o destino do voo
 
-                        it->visualizarPassageiros(astronautas); // Passar a lista de astronautas como argumento
                         encontrado = true;
                         // Adicionar astronautas ao voo
                         while (true) {
+                            it->visualizarPassageiros(astronautas); // Passar a lista de passageiros do voo
+
                             string cpfAstronauta;
+
+                            cout << endl << "   Astronautas Disponiveis:" << endl << endl;
+
+                            if (astronautas.empty()) {
+                                cout << "Nao ha astronautas disponiveis." << endl;
+                            }
+                            else {
+                                for (auto& astronauta : astronautas) {
+                                    if (astronauta.getDisponibilidade()) {
+                                        cout << "Nome: " << astronauta.getNome() << endl;
+                                        cout << "CPF: " << astronauta.getCPF() << endl;
+                                    }
+                                    cout << endl;
+                                }
+                            }
+                            cout << endl;
+
                             cout << "Digite o CPF do astronauta a ser adicionado ao voo ( [0] para sair ): ";
                             cin >> cpfAstronauta;
                             if (cpfAstronauta == "0") {
@@ -202,16 +231,15 @@ int main(void) {
                             break;
                         }
                 }
-
                 if (!encontrado) {
                     cout << "Voo nao encontrado!" << endl;
                 }
 
+                pausaParaLeitura();
                 break;
             }
 
-            case 4: {
-
+            case 4: {  // Case de remoção de astronautas de voo
                 cout << "Voos disponiveis (em planejamento): " << endl;
 
                 for (const auto& voo : voos) {
@@ -276,12 +304,13 @@ int main(void) {
 
                 if (!encontrado) {
                     cout << "Voo nao encontrado!" << endl;
-                }
+                }   
 
+                pausaParaLeitura();
                 break;
             }
 
-            case 5: {
+            case 5: {  // Case de listagem de voos
 
                 cout << "Voos cadastrados:" << endl;
 
@@ -316,10 +345,12 @@ int main(void) {
                         cout << endl;
                     }    
                 }
+
+                pausaParaLeitura();
                 break;
             }
 
-            case 6: {
+            case 6: {  // Case de lançamento de voo
                 cout << "Voos disponiveis para lancamento: " << endl;
 
                 for (const auto& voo : voos) {
@@ -358,10 +389,12 @@ int main(void) {
                 if (!encontrado) {
                     cout << "Voo nao encontrado!" << endl;
                 }
+
+                pausaParaLeitura();
                 break;
             }
 
-            case 7: {
+            case 7: {  // Case de finalização de voo
 
                 cout << "Voos disponiveis para finalizar: " << endl;
 
@@ -383,7 +416,7 @@ int main(void) {
                 // Percorrer a lista de voos
                 for (auto& voo : voos) {
                     if (voo.getCodigo() == cod && voo.getStatus() == EMVOO) {
-                        voo.finalizarVoo(); // Chamar a função finalizarVoo() neste voo
+                        voo.finalizarVoo(astronautas); // Chamar a função finalizarVoo() neste voo
                         encontrado = true;
                         cout << "Voo finalizado com sucesso!" << endl;
                         break;
@@ -399,10 +432,11 @@ int main(void) {
                     cout << "Voo nao encontrado!" << endl;
                 }
 
+                pausaParaLeitura();
                 break;
             }
 
-            case 8: {
+            case 8: {  // Case de listagem de astronautas
                 cout << "Astronautas Cadastrados:" << endl << endl;
 
                 if (astronautas.empty()) {
@@ -428,28 +462,36 @@ int main(void) {
                 }
                 cout << endl;
 
+                pausaParaLeitura();
                 break;
             }
-            case 9: {
-                // Menções Honrosas para os astronautas tiveram os status alterados para mortos
+            
+            case 9: {  // Case que disponibiliza a função de busca de voos e suas informações a partir de um determinado destino
+                buscarVooPorDestino(voos, astronautas);
+                pausaParaLeitura();
+                break;
+            }
+            
+            case 10: { // Case de menções honrosas para os astronautas tiveram os status alterados para mortos
                 
-                cout << "Mencoes Honrosas a" << endl << endl;;
-
+                cout << "Mencoes Honrosas a" << endl << endl;
                 // Acessar a lista de astronautas mortos do cemitério
-                const list<Astronauta>& astronautasMortos = Cemiterio::getAstronautasMortos();
-
+                const list<Astronauta>& astronautasMortos = cemiterio.getAstronautasMortos();
                 // Iterar sobre a lista de astronautas mortos e imprimir menções honrosas
                 for (const auto& astronauta : astronautasMortos) {
                     cout << "   O astronauta " << astronauta.getNome() << " morreu bravamente" << endl;
-                    cout << "   Aqui esta a lista de voos em que ele participou:" << endl;
-                    for (const auto& cods : astronauta.getHistoricoVoos()) {
-                        cout << "       Voo " << cods << endl;
+                    cout << "   Ultimo voo em que participou foi o " << astronauta.getHistoricoVoos().back() <<  " com destivo a ";
+                    for (const auto& voo : voos) {
+                        if (voo.getCodigo() == astronauta.getHistoricoVoos().back()) {
+                            cout << voo.getDestino() << endl; 
+                        }
                     }
                     cout << endl;
                 }
                 cout << endl;
                 cout << endl << "Esses foram os herois que deram sua vida voando conosco" << endl << endl;
 
+                pausaParaLeitura();
                 break;
             }
             default:
@@ -457,8 +499,6 @@ int main(void) {
                 controle = 1;
                 break;
         }
-        cout << endl;
-        cout << endl;
     }
     return 0;
 }

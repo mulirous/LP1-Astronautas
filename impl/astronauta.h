@@ -4,13 +4,11 @@
 #include <iostream>
 #include <list>
 #include <string>
+#include "enumAstro.h"
 
 using namespace std;
 
-enum astroStatus {
-    VIVO,
-    MORTO,
-};
+
 
 class Astronauta {
 private:

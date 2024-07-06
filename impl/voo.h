@@ -1,17 +1,13 @@
 #ifndef VOO_H
 #define VOO_H
 
-#include "astronauta.h"
 #include <list>
 #include <string>
+#include "astronauta.h"
+#include "enumAstro.h"
+#include "enumVoo.h"
 
 using namespace std;
-
-enum vooStatus {
-    PLANEJANDO,
-    DESTRUIDO,
-    EMVOO,
-};
 
 class Voo {
 private:
@@ -34,7 +30,7 @@ public:
     void lancarVoo();
     void visualizarPassageiros(const list<Astronauta>& astronautas) const;
     void removerPassageiro(const string& cpf);
-    void finalizarVoo();
+    void finalizarVoo(list <Astronauta>& astronautas);
 };
 
 #endif
