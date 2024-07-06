@@ -7,8 +7,10 @@
 <br>
 <code>g++ .\src\main.cpp .\src\mod\astronauta.cpp .\src\mod\cemiterio.cpp .\src\mod\voo.cpp .\src\mod\tools.cpp -o comando -g -W</code>
 <br>
+<br>
 <p>Após isso, basta digitar a linha de comando do executável:</p>
 <br>
 <code>./comando</code>
+<br>
 <br>
 <p>E então, assim o programa ira rodar na sua máquina.</p>
