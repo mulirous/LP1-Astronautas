@@ -5,7 +5,6 @@
 #include <list>
 #include <thread>
 #include <chrono>
-#include <algorithm>
 #include "../impl/enumAstro.h"
 #include "../impl/enumVoo.h"
 #include "../impl/astronauta.h"
