@@ -1,6 +1,3 @@
-// Falta para fazer:
-// Acessar o ultimo voo do astronauta que morreu
-
 #include <iostream>
 #include <list>
 #include <thread>
