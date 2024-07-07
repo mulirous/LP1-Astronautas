@@ -501,7 +501,7 @@ int main(void) {
 
                 }
                 cout << endl;
-                cout << endl << "Esses foram os herois que deram sua vida por nos" << endl << endl;
+                cout << endl << "Esses foram os herois que deram suas vidas por nos" << endl << endl;
 
                 pausaParaLeitura();
                 break;
