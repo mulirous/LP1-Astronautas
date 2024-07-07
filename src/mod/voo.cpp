@@ -36,25 +36,6 @@ void Voo::adicionarPassageiro(const Astronauta& astronauta) {  // Método que ad
     passageiros.push_back(astronauta);
 }
 
-void Voo::lancarVoo() {  // Método que lança o voo, mudando seu status e disponibilidade
-    srand(time(nullptr));
-    int numAleatorio = rand() % 2; // Número entre 1 e 0 para que seja aleatória a destruição do voo ou seu sucesso
-
-    if (numAleatorio == 0) {
-        status = DESTRUIDO;
-        cout << "O Voo de codigo " << codigoVoo << " foi explodido." << endl;
-        for (auto& astronauta : passageiros) {
-            astronauta.mataAstro();
-            cout << "O astronauta " << astronauta.getNome() << " morreu..." << endl;
-            Cemiterio::adicionarMorto(astronauta);
-        }
-    } else {
-        status = EMVOO;
-        cout << "O Voo de codigo " << codigoVoo << " esta a caminho de " << destino << endl;
-    }
-
-    dispo = false;
-}
 
 void Voo::visualizarPassageiros(const list<Astronauta>& astronautas) const {  // Método que mostra os astronautas contidos nas sua lista de passageiros
     cout << "   Astronautas cadastrados para o voo [" << codigoVoo << "]:" << endl;
@@ -76,6 +57,26 @@ void Voo::removerPassageiro(const string& cpf) {  // Método que retira o astron
             return;
         }
     }
+}
+
+void Voo::lancarVoo() {  // Método que lança o voo, mudando seu status e disponibilidade
+    srand(time(nullptr));
+    int numAleatorio = rand() % 2; // Número entre 1 e 0 para que seja aleatória a destruição do voo ou seu sucesso
+
+    if (numAleatorio == 0) {
+        status = DESTRUIDO;
+        cout << "O Voo de codigo " << codigoVoo << " foi explodido" << endl;
+        for (auto& astronauta : passageiros) {
+            astronauta.mataAstro();
+            cout << "O astronauta " << astronauta.getNome() << " morreu..." << endl;
+            Cemiterio::adicionarMorto(astronauta);
+        }
+    } else {
+        status = EMVOO;
+        cout << "O Voo de codigo " << codigoVoo << " esta a caminho de " << destino << endl;
+    }
+
+    dispo = false;
 }
 
 void Voo::finalizarVoo(list <Astronauta>& astronautas) {  // Método que finaliza o voo, mudando seu status e disponibilidade

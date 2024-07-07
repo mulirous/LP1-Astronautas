@@ -36,9 +36,6 @@ void Astronauta::setIndisponivel() {  // Método que muda a disponibilidade do a
     dispo = false;
 }
 
-void Astronauta::adicionarVoo(int codigoVoo) {  // Método que adiciona o código do voo ao final da lista de voos em que já foi inserido
-    historicoVoos.push_back(codigoVoo);
-}
 
 const list<int>& Astronauta::getHistoricoVoos() const {  // Método que retorna a lista de voos em que já foi inserido
     return historicoVoos;
@@ -46,4 +43,8 @@ const list<int>& Astronauta::getHistoricoVoos() const {  // Método que retorna 
 
 void Astronauta::setHistoricoVoos(const list<int>& novoHistorico) {  // Método que atualiza a lista de voos em que já foi inserido
     historicoVoos = novoHistorico;
+}
+
+void Astronauta::adicionarVoo(int codigoVoo) {  // Método que adiciona o código do voo ao final da lista de voos em que já foi inserido
+    return historicoVoos.push_back(codigoVoo);
 }

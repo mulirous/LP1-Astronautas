@@ -5,6 +5,7 @@
 #include <list>
 #include <thread>
 #include <chrono>
+#include <algorithm>
 #include "../impl/enumAstro.h"
 #include "../impl/enumVoo.h"
 #include "../impl/astronauta.h"
@@ -241,15 +242,15 @@ int main(void) {
 
             case 4: {  // Case de remoção de astronautas de voo
                 cout << "Voos disponiveis (em planejamento): " << endl;
-
+                
                 for (const auto& voo : voos) {
                     if (voo.getStatus() == PLANEJANDO) {
                         cout << "   Voo Cod: " << voo.getCodigo() << endl;
                     }
                 }
-
+                
                 cout << endl;
-
+                
                 int cod;
                 cout << "Digite o codigo do voo do qual deseja remover passageiros: ";
                 cin >> cod;
@@ -447,9 +448,16 @@ int main(void) {
                         cout << "Nome: " << astronauta.getNome() << endl;
                         cout << "CPF: " << astronauta.getCPF() << endl;
                         cout << "Idade: " << astronauta.getIdade() << endl;
-                        if (astronauta.getDisponibilidade()) cout << "Status: Disponivel" << endl;
-                        else cout << "Status: Indisponivel" << endl;
+                        
+                        if (astronauta.getDisponibilidade()){
+                            cout << "Status: Disponivel" << endl;
+                            } 
+                        else {
+                            cout << "Status: Indisponivel" << endl;
+                        } 
+
                         cout << "Ultimo voo cadastrado: ";
+
                         if (astronauta.getHistoricoVoos().empty()) {
                             cout << "O astronauta nao esteve cadastrado em nenhum voo" << endl;
                         }
@@ -459,7 +467,9 @@ int main(void) {
                         
                         cout << endl;
                     }
+
                 }
+
                 cout << endl;
 
                 pausaParaLeitura();
@@ -472,28 +482,35 @@ int main(void) {
                 break;
             }
             
-            case 10: { // Case de menções honrosas para os astronautas tiveram os status alterados para mortos
-                
+            case 10: { // Case que exibe o mural de menções honrosas aos asrtonautas mortos no lançamento do voo, mostrando o ultimo voo com o seu destino.
                 cout << "Mencoes Honrosas a" << endl << endl;
-                // Acessar a lista de astronautas mortos do cemitério
+                
                 const list<Astronauta>& astronautasMortos = cemiterio.getAstronautasMortos();
-                // Iterar sobre a lista de astronautas mortos e imprimir menções honrosas
+                
                 for (const auto& astronauta : astronautasMortos) {
-                    cout << "   O astronauta " << astronauta.getNome() << " morreu bravamente" << endl;
-                    cout << "   Ultimo voo em que participou foi o " << astronauta.getHistoricoVoos().back() <<  " com destivo a ";
-                    for (const auto& voo : voos) {
-                        if (voo.getCodigo() == astronauta.getHistoricoVoos().back()) {
-                            cout << voo.getDestino() << endl; 
-                        }
+                    cout << "   " << astronauta.getNome() << endl;
+
+                    if (astronauta.getHistoricoVoos().empty()) {
+                        cout << "   Motivo da morte: Desconhecido..." << endl;
                     }
-                    cout << endl;
+                    else {
+                        cout << "   Morreu no voo " << astronauta.getHistoricoVoos().back() <<  " com destino a ";
+                        for (const auto& voo : voos) {
+                            if (voo.getCodigo() == astronauta.getHistoricoVoos().back()) {
+                                cout << voo.getDestino() << endl; 
+                            }
+                        }
+                        cout << endl;
+                    }
+
                 }
                 cout << endl;
-                cout << endl << "Esses foram os herois que deram sua vida voando conosco" << endl << endl;
+                cout << endl << "Esses foram os herois que deram sua vida por nos" << endl << endl;
 
                 pausaParaLeitura();
                 break;
             }
+    
             default:
                 cout << "Saindo..." << endl;
                 controle = 1;
